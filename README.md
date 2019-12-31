@@ -3,7 +3,7 @@
 1. Installation:
    `npm i`
 2. 使用 `setJson` 函數創造商店的物件，代入 config ，並將物件存入常數 `testShop` 中，如 `const testShop = setJson(shopConfig);`
-3. 此物件有 `.init` 方法，呼叫後可以抓到 API 並重組 JSON，可透過 `.finalJson` 得到 finalJson，如下使用
+3. 此物件有 `.init` 方法，呼叫後可以抓到 API 並重組 JSON，可透過 `.finalJson` 得到 final JSON，如下使用
 
 ```js
 const shopConfig = {
@@ -16,7 +16,7 @@ testShop.init().then(() => console.log('final JSON', JSON.stringify(testShop.fin
 
 # 其他操作
 
-1. 取得 MWeb 全部的 API ，可使用 `.getAPI()` 方法
+1. 取得全部的 API ，可使用 `.getAPI()` 方法
 
 ```js
 (function() {
