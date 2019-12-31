@@ -28,7 +28,7 @@ testShop.init().then(() => console.log('final JSON', JSON.stringify(testShop.fin
   testShop
     .getAPI()
     .then(result => console.log('get all API object', result))
-    .then(() => console.log('get previousJson', testShop.mWebJson));
+    .then(() => console.log('get previousJson', testShop.previousJson));
 })();
 ```
 
