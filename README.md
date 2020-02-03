@@ -10,8 +10,10 @@ const shopConfig = {
   shopId: 12345,
   domainName: 'http://example.com/'
 };
-const testShop = setJson(shopConfig);
-testShop.init().then(() => console.log('final JSON', JSON.stringify(testShop.finalJson)));
+const shop = setJson(shopConfig);
+shop.init()
+    .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
+    .catch(err => console.log(`oops! there is an error: ${err}`));
 ```
 
 # 其他操作
@@ -27,8 +29,8 @@ testShop.init().then(() => console.log('final JSON', JSON.stringify(testShop.fin
   const testShop = setJson(shopConfig);
   testShop
     .getAPI()
-    .then(result => console.log('get all API object', result))
     .then(() => console.log('get previousJson', testShop.previousJson));
+    .catch(err => console.log(`oops! there is an error: ${err}`));
 })();
 ```
 
