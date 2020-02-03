@@ -144,5 +144,5 @@ function setJson(...args) {
   const shop = setJson(shopConfig);
   shop.init()
       .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
-      .catch(err => console.log(`oops! there is error: ${err}`));
+      .catch(err => console.log(`oops! there is an error: ${err}`));
 })();
