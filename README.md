@@ -29,7 +29,7 @@ shop.init()
   const testShop = setJson(shopConfig);
   testShop
     .getAPI()
-    .then(() => console.log('get previousJson', testShop.previousJson));
+    .then(() => console.log('get previousJson', testShop.previousJson))
     .catch(err => console.log(`oops! there is an error: ${err}`));
 })();
 ```
