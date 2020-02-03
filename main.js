@@ -75,15 +75,44 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
 
   // public method
   this.getAPI = async function() {
-    for (const item in urls) {
-      try {
-        previousJson[item] = await fetch(urls[item]).then(res => (res.ok ? res.json() : null));
-        console.log(`done: ${item}`);
-      } catch (error) {
-        console.log(`fetch error: ${error}`);
+    try {
+      console.log(`shop ID: ${this.shopId} - start fetching...`);
+      const urlsPromise = [];
+      const requestWithHeader = (url, key, value) => {
+        const header = new fetch.Headers();
+        header.append(key, value);
+        return new fetch.Request(url, { method: 'GET', headers: header });
+      };
+      for (const apiType in urls) {
+        urlsPromise.push(
+          fetch(
+            apiType === 'urlOne'
+              ? requestWithHeader(
+                  urls.urlOne,
+                  'conversion-access-token',
+                  'key-from-backend'
+                )
+              : urls[apiType]
+          ).then(res => {
+            if (res.status !== 200) {
+              throw new Error(
+                JSON.stringify({ code: res.status, text: res.statusText, apiName: apiType })
+              );
+            }
+            return res.json();
+          })
+        );
       }
+      const urlsResult = await Promise.all(urlsPromise);
+      urlsResult.forEach((apiData, i) => {
+        previousJson[Object.keys(urls)[i]] = apiData;
+      });
+      console.log(`all done: ${Object.keys(previousJson)}`);
+    } catch (error) {
+      const { code, text, apiName } = JSON.parse(error.message);
+      console.log(`fetch ${apiName} URL error: --- ${code} ${text} ---`);
+      return Promise.reject('fetching API failed');
     }
-    return new Promise(resolve => resolve(previousJson));
   };
 
   this.build = function() {
@@ -96,7 +125,11 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
 
   this.init = async function() {
     if (this.shopId && this.domainName) {
-      await this.getAPI();
+      try {
+        await this.getAPI();
+      } catch (error) {
+        return Promise.reject(error);
+      }
     }
     this.build();
   };
@@ -109,5 +142,7 @@ function setJson(...args) {
 
 (function() {
   const shop = setJson(shopConfig);
-  shop.init().then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)));
+  shop.init()
+      .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
+      .catch(err => console.log(`oops! there is error: ${err}`));
 })();
