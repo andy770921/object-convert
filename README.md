@@ -2,7 +2,7 @@
 
 1. Installation:
    `npm i`
-2. 使用 `setJson` 函數創造商店的物件，代入 config ，並將物件存入常數 `testShop` 中，如 `const testShop = setJson(shopConfig);`
+2. 使用 `setJson` 函數創造商店的物件，代入 config ，並將物件存入常數 `shop` 中，如 `const shop = setJson(shopConfig);`
 3. 此物件有 `.init` 方法，呼叫後可以抓到 API 並重組 JSON，可透過 `.finalJson` 得到 final JSON，如下使用
 
 ```js
@@ -26,8 +26,8 @@ shop.init()
     shopId: 12345,
     domainName: 'http://example.com/'
   };
-  const testShop = setJson(shopConfig);
-  testShop
+  const shop = setJson(shopConfig);
+  shop
     .getAPI()
     .then(() => console.log('get previousJson', testShop.previousJson))
     .catch(err => console.log(`oops! there is an error: ${err}`));
