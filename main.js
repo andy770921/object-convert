@@ -83,7 +83,7 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
         header.append(key, value);
         return new fetch.Request(url, { method: 'GET', headers: header });
       };
-      for (const apiType in urls) {
+      Object.keys(urls).forEach(apiType => {
         urlsPromise.push(
           fetch(
             apiType === 'urlOne'
@@ -111,7 +111,7 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
     } catch (error) {
       const { code, text, apiName } = JSON.parse(error.message);
       console.log(`fetch ${apiName} URL error: --- ${code} ${text} ---`);
-      return Promise.reject('fetching API failed');
+      return Promise.reject(new Error('fetching API failed'));
     }
   };
 
