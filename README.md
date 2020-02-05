@@ -12,7 +12,7 @@ const shopConfig = {
 };
 const shop = setJson(shopConfig);
 shop.init()
-    .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
+    .then(finalJson => console.log('final JSON: ', JSON.stringify(finalJson)))
     .catch(err => console.log(`oops! there is an error: ${err}`));
 ```
 
@@ -29,7 +29,7 @@ shop.init()
   const shop = setJson(shopConfig);
   shop
     .getAPI()
-    .then(() => console.log('get previousJson', shop.previousJson))
+    .then(previousJson => console.log('get previousJson', previousJson))
     .catch(err => console.log(`oops! there is an error: ${err}`));
 })();
 ```
