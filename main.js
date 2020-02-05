@@ -106,6 +106,7 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
         previousJson[Object.keys(urls)[i]] = apiData;
       });
       console.log(`all done: ${Object.keys(previousJson)}`);
+      return previousJson;
     } catch (error) {
       const { code, text, apiName } = JSON.parse(error.message);
       console.error(`fetch ${apiName} URL error: --- ${code} ${text} ---`);
@@ -126,6 +127,7 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
       if (this.shopId && this.domainName) {
         await this.getAPI();
         this.build();
+        return finalJson;
       }
     } catch (error) {
       return Promise.reject(error);
@@ -141,6 +143,6 @@ function setJson(...args) {
 (function() {
   const shop = setJson(shopConfig);
   shop.init()
-      .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
+      .then(finalJson => console.log('final JSON: ', JSON.stringify(finalJson)))
       .catch(err => console.error(`oops! there is an error: ${err}`));
 })();
