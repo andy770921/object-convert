@@ -77,40 +77,38 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
   this.getAPI = async function() {
     try {
       console.log(`shop ID: ${this.shopId} - start fetching...`);
-      const urlsPromise = [];
+      const urlsDataPromise = [];
       const requestWithHeader = (url, key, value) => {
         const header = new fetch.Headers();
         header.append(key, value);
         return new fetch.Request(url, { method: 'GET', headers: header });
       };
-      Object.keys(urls).forEach(apiType => {
-        urlsPromise.push(
-          fetch(
-            apiType === 'urlOne'
-              ? requestWithHeader(
-                  urls.urlOne,
-                  'conversion-access-token',
-                  'key-from-backend'
-                )
-              : urls[apiType]
-          ).then(res => {
-            if (res.status !== 200) {
-              throw new Error(
-                JSON.stringify({ code: res.status, text: res.statusText, apiName: apiType })
-              );
-            }
-            return res.json();
-          })
+      for (const apiType in urls) {
+        const response = await fetch(
+          apiType === 'urlOne'
+            ? requestWithHeader(
+                urls.urlOne,
+                'conversion-access-token',
+                'key-from-backend'
+              )
+            : urls[apiType]
         );
+        if (response.status !== 200) {
+          throw new Error(
+            JSON.stringify({ code: response.status, text: response.statusText, apiName: apiType })
+          );
+        } else {
+          urlsDataPromise.push(response.json());
+        };
       }
-      const urlsResult = await Promise.all(urlsPromise);
+      const urlsResult = await Promise.all(urlsDataPromise);
       urlsResult.forEach((apiData, i) => {
         previousJson[Object.keys(urls)[i]] = apiData;
       });
       console.log(`all done: ${Object.keys(previousJson)}`);
     } catch (error) {
       const { code, text, apiName } = JSON.parse(error.message);
-      console.log(`fetch ${apiName} URL error: --- ${code} ${text} ---`);
+      console.error(`fetch ${apiName} URL error: --- ${code} ${text} ---`);
       return Promise.reject(new Error('fetching API failed'));
     }
   };
@@ -118,20 +116,20 @@ function SetJson(shopConfig = { shopId: null, domainName: null }) {
   this.build = function() {
     finalJson
       .setCarouselArea(getCarouselPara(previousJson.urlOne))
-      .setImageArea(getImagePara(previousJson.urlOne))
-      .setProductArea(getProdPara(previousJson.urlOne))
+      .setImageArea(getImagePara(previousJson.urlTwo))
+      .setProductArea(getProdPara(previousJson.urlTwo))
       .resetFooterIndex();
   };
 
   this.init = async function() {
-    if (this.shopId && this.domainName) {
-      try {
+    try {
+      if (this.shopId && this.domainName) {
         await this.getAPI();
-      } catch (error) {
-        return Promise.reject(error);
+        this.build();
       }
+    } catch (error) {
+      return Promise.reject(error);
     }
-    this.build();
   };
 }
 
@@ -144,5 +142,5 @@ function setJson(...args) {
   const shop = setJson(shopConfig);
   shop.init()
       .then(() => console.log('final JSON: ', JSON.stringify(shop.finalJson)))
-      .catch(err => console.log(`oops! there is an error: ${err}`));
+      .catch(err => console.error(`oops! there is an error: ${err}`));
 })();
