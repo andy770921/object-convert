@@ -12,7 +12,7 @@ const shopConfig = {
 };
 const shop = setJson(shopConfig);
 shop.init()
-    .then(finalJson => console.log('final JSON: ', JSON.stringify(finalJson)))
+    .then(jsonAfterBuild => console.log('final JSON: ', JSON.stringify(jsonAfterBuild)))
     .catch(err => console.log(`oops! there is an error: ${err}`));
 ```
 
@@ -29,10 +29,10 @@ shop.init()
   const shop = setJson(shopConfig);
   shop
     .getAPI()
-    .then(previousJson => console.log('get previousJson', previousJson))
+    .then(jsonFromApi => console.log('get previous Json from API', jsonFromApi))
     .catch(err => console.log(`oops! there is an error: ${err}`));
 })();
 ```
 
-2. 取得 Previous JSON 物件，可用 `.previousJson`
-3. 取得 Final JSON 檔，可用 `.finalJson`
+2. 取得 Previous JSON 物件，可在 `.getAPI()` 或 `.init()` 的 Promise 執行完後，用 `.previousJson` 取得。如 `shop.previousJson`
+3. 取得 Final JSON 物件，可在 `.init()` 的 Promise 執行完後，用 `.finalJson` 取得。如 `shop.finalJson`
